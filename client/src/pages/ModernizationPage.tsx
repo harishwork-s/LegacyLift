@@ -17,16 +17,23 @@ interface ModernizationPlan {
   steps: PlanStep[]
 }
 
-const STATUS_STYLES = {
-  Done:        'bg-green-950 text-green-400 border border-green-800',
-  'In Progress':'bg-blue-950 text-blue-400 border border-blue-800',
-  Pending:     'bg-slate-800 text-slate-400 border border-slate-700',
+const STATUS_STYLE: Record<string, { bg: string; border: string; color: string; dot: string }> = {
+  Done:        { bg: '#f0fdf4', border: '#bbf7d0', color: '#1a7f37', dot: '#1a7f37' },
+  'In Progress':{ bg: '#eff6ff', border: '#bfdbfe', color: '#1558b0', dot: '#1f6feb' },
+  Pending:     { bg: '#f8f9fb', border: '#e5e7eb', color: '#57606a', dot: '#d1d5db' },
 }
 
-const EFFORT_STYLES = {
-  Low:    'text-green-400',
-  Medium: 'text-yellow-400',
-  High:   'text-red-400',
+const EFFORT_STYLE: Record<string, string> = {
+  Low:    '#1a7f37',
+  Medium: '#b45309',
+  High:   '#cf222e',
+}
+
+const card: React.CSSProperties = {
+  background: '#fff',
+  border: '1px solid #e5e7eb',
+  borderRadius: 10,
+  boxShadow: '0 1px 3px rgba(0,0,0,.06)',
 }
 
 export default function ModernizationPage() {
@@ -39,92 +46,114 @@ export default function ModernizationPage() {
   }, [])
 
   if (!data) return (
-    <div className="flex items-center justify-center h-64">
-      <div className="w-8 h-8 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: 256 }}>
+      <div style={{ width: 32, height: 32, border: '3px solid #e5e7eb', borderTopColor: '#1f6feb', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />
+      <style>{`@keyframes spin { to { transform: rotate(360deg) } }`}</style>
     </div>
   )
 
   const doneCount = data.steps.filter(s => s.status === 'Done').length
   const inProgCount = data.steps.filter(s => s.status === 'In Progress').length
+  const pendingCount = data.steps.length - doneCount - inProgCount
   const progress = Math.round((doneCount / data.steps.length) * 100)
 
   return (
-    <div className="max-w-3xl mx-auto">
-      <div className="mb-8 flex items-start justify-between flex-wrap gap-4">
+    <div style={{ maxWidth: 780, margin: '0 auto' }}>
+      {/* Page header */}
+      <div style={{ marginBottom: 28, display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12 }}>
         <div>
-          <div className="flex items-center gap-2 mb-1">
-            <span className="text-xs font-mono text-slate-500">03 / 05</span>
-            <span className="text-slate-600">·</span>
-            <span className="text-xs text-slate-500">Modernization Plan</span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>
+            <span style={{ fontSize: 11, fontFamily: 'monospace', color: '#8b949e', fontWeight: 600 }}>03 / 05</span>
+            <span style={{ color: '#d1d5db' }}>·</span>
+            <span style={{ fontSize: 12, color: '#8b949e' }}>Modernization Plan</span>
           </div>
-          <h1 className="text-2xl font-bold text-white mb-1">Modernization Plan</h1>
-          <p className="text-slate-400 text-sm">
-            Target: <span className="text-blue-400 font-mono text-xs">{data.targetStack}</span>
+          <h1 style={{ fontSize: 24, fontWeight: 700, color: '#1f2328', margin: 0, letterSpacing: '-0.02em' }}>Modernization Plan</h1>
+          <p style={{ fontSize: 13, color: '#57606a', marginTop: 4 }}>
+            Target: <span style={{ fontFamily: 'monospace', fontWeight: 600, color: '#1f6feb' }}>{data.targetStack}</span>
           </p>
         </div>
         <button
           onClick={() => navigate('/comparison')}
-          className="text-xs bg-slate-800 hover:bg-slate-700 border border-slate-600 text-slate-300 font-medium px-3 py-1.5 rounded-lg transition-colors mt-1"
+          style={{ fontSize: 12, background: '#fff', border: '1px solid #e5e7eb', color: '#57606a', fontWeight: 500, padding: '7px 14px', borderRadius: 7, cursor: 'pointer', boxShadow: '0 1px 2px rgba(0,0,0,.05)' }}
         >
           Next: Before / After →
         </button>
       </div>
 
-      {/* Progress */}
-      <div className="bg-slate-900 border border-slate-700 rounded-xl p-5 mb-6">
-        <div className="flex justify-between text-sm mb-3">
-          <span className="text-white font-medium">Overall Progress</span>
-          <span className="text-slate-400">{doneCount} of {data.steps.length} steps complete</span>
+      {/* Progress card */}
+      <div style={{ ...card, padding: '20px 22px', marginBottom: 24 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
+          <span style={{ fontSize: 14, fontWeight: 600, color: '#1f2328' }}>Overall Progress</span>
+          <span style={{ fontSize: 13, color: '#57606a' }}>{doneCount} of {data.steps.length} steps complete</span>
         </div>
-        <div className="h-3 bg-slate-800 rounded-full overflow-hidden mb-3">
-          <div
-            className="h-full bg-blue-500 rounded-full transition-all"
-            style={{ width: `${progress}%` }}
-          />
+        {/* Progress bar */}
+        <div style={{ height: 10, background: '#f1f3f5', borderRadius: 99, overflow: 'hidden', marginBottom: 14 }}>
+          <div style={{ height: '100%', background: '#1f6feb', borderRadius: 99, width: `${progress}%`, transition: 'width 0.4s ease' }} />
         </div>
-        <div className="flex gap-4 text-xs">
-          <span className="text-green-400">✓ {doneCount} Done</span>
-          <span className="text-blue-400">⟳ {inProgCount} In Progress</span>
-          <span className="text-slate-500">○ {data.steps.length - doneCount - inProgCount} Pending</span>
+        <div style={{ display: 'flex', gap: 20 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12 }}>
+            <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#1a7f37', flexShrink: 0 }} />
+            <span style={{ color: '#1a7f37', fontWeight: 500 }}>{doneCount} Done</span>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12 }}>
+            <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#1f6feb', flexShrink: 0 }} />
+            <span style={{ color: '#1558b0', fontWeight: 500 }}>{inProgCount} In Progress</span>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12 }}>
+            <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#d1d5db', flexShrink: 0 }} />
+            <span style={{ color: '#57606a', fontWeight: 500 }}>{pendingCount} Pending</span>
+          </div>
         </div>
       </div>
 
       {/* Steps */}
-      <div className="space-y-3">
-        {data.steps.map(step => (
-          <div key={step.id} className="bg-slate-900 border border-slate-700 rounded-xl overflow-hidden">
-            <button
-              className="w-full flex items-center justify-between p-5 text-left hover:bg-slate-800/50 transition-colors"
-              onClick={() => setExpanded(expanded === step.id ? null : step.id)}
-            >
-              <div className="flex items-center gap-4">
-                <div className="w-8 h-8 rounded-full bg-slate-800 border border-slate-600 flex items-center justify-center text-xs font-mono text-slate-400 flex-shrink-0">
-                  {step.id}
-                </div>
-                <div>
-                  <div className="font-semibold text-white text-sm">{step.title}</div>
-                  <div className="flex items-center gap-2 mt-1">
-                    <span className={`text-xs font-medium px-2 py-0.5 rounded ${STATUS_STYLES[step.status]}`}>
-                      {step.status}
-                    </span>
-                    <span className={`text-xs font-medium ${EFFORT_STYLES[step.effort]}`}>
-                      {step.effort} effort
-                    </span>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+        {data.steps.map(step => {
+          const ss = STATUS_STYLE[step.status]
+          const isOpen = expanded === step.id
+          return (
+            <div key={step.id} style={{ ...card, overflow: 'hidden', borderLeft: `3px solid ${ss.dot}` }}>
+              <button
+                style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 20px', background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left' }}
+                onClick={() => setExpanded(isOpen ? null : step.id)}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+                  {/* Step number — secondary */}
+                  <div style={{
+                    width: 28, height: 28, borderRadius: '50%', flexShrink: 0,
+                    background: ss.bg, border: `1px solid ${ss.border}`,
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    fontSize: 11, fontFamily: 'monospace', color: ss.color, fontWeight: 700,
+                  }}>
+                    {step.id}
+                  </div>
+                  <div>
+                    <div style={{ fontWeight: 600, fontSize: 14, color: '#1f2328' }}>{step.title}</div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 4 }}>
+                      <span style={{ fontSize: 11, fontWeight: 600, padding: '1px 7px', borderRadius: 4, background: ss.bg, border: `1px solid ${ss.border}`, color: ss.color }}>
+                        {step.status}
+                      </span>
+                      <span style={{ fontSize: 11, color: EFFORT_STYLE[step.effort], fontWeight: 500 }}>
+                        {step.effort} effort
+                      </span>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <span className="text-slate-500 text-xs">{expanded === step.id ? '▲' : '▼'}</span>
-            </button>
-            {expanded === step.id && (
-              <div className="px-5 pb-5 border-t border-slate-800 pt-4">
-                <p className="text-slate-300 text-sm leading-relaxed mb-4">{step.description}</p>
-                <div className="bg-slate-800 rounded-lg px-3 py-2 text-xs text-green-300">
-                  <span className="text-slate-500 mr-1">Outcome:</span>{step.outcome}
+                <span style={{ color: '#8b949e', fontSize: 11, flexShrink: 0 }}>{isOpen ? '▲' : '▼'}</span>
+              </button>
+
+              {isOpen && (
+                <div style={{ borderTop: '1px solid #f1f3f5', padding: '16px 20px' }}>
+                  <p style={{ fontSize: 13, color: '#57606a', lineHeight: 1.7, margin: '0 0 14px' }}>{step.description}</p>
+                  <div style={{ background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: 7, padding: '8px 12px', fontSize: 12, color: '#1a7f37', display: 'flex', gap: 6 }}>
+                    <span style={{ color: '#8b949e', fontWeight: 500, flexShrink: 0 }}>Outcome:</span>
+                    <span>{step.outcome}</span>
+                  </div>
                 </div>
-              </div>
-            )}
-          </div>
-        ))}
+              )}
+            </div>
+          )
+        })}
       </div>
     </div>
   )
