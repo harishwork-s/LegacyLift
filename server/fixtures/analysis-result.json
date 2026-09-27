@@ -1,0 +1,89 @@
+{
+  "file": "CustomerOrderProcessor.java",
+  "language": "Java 8",
+  "linesOfCode": 130,
+  "complexityScore": 78,
+  "issues": [
+    {
+      "id": "SQL_INJECTION",
+      "type": "Security",
+      "severity": "Critical",
+      "title": "SQL Injection Vulnerability",
+      "description": "String concatenation used directly in SQL queries. Attacker-controlled input can manipulate query structure (CVE class: CWE-89).",
+      "line": 35,
+      "recommendation": "Replace with PreparedStatement and parameterized queries."
+    },
+    {
+      "id": "HARDCODED_CREDENTIALS",
+      "type": "Security",
+      "severity": "Critical",
+      "title": "Hardcoded Database Credentials",
+      "description": "Database URL, username, and password are hardcoded as static final strings in the class body.",
+      "line": 17,
+      "recommendation": "Externalize credentials to environment variables or a secrets manager."
+    },
+    {
+      "id": "GOD_CLASS",
+      "type": "Design",
+      "severity": "Warning",
+      "title": "God Class Anti-Pattern",
+      "description": "Single class handles DB access, business logic, stock management, audit logging, and email notification — violates Single Responsibility Principle.",
+      "line": 1,
+      "recommendation": "Decompose into Service, Repository, and Notification layers."
+    },
+    {
+      "id": "NO_CONNECTION_POOL",
+      "type": "Performance",
+      "severity": "Warning",
+      "title": "New DB Connection Per Request",
+      "description": "DriverManager.getConnection() is called on every method invocation. No connection pooling, causing excessive overhead under load.",
+      "line": 30,
+      "recommendation": "Use a DataSource with HikariCP or equivalent connection pool."
+    },
+    {
+      "id": "EXCEPTION_SWALLOWING",
+      "type": "Reliability",
+      "severity": "Warning",
+      "title": "All Exceptions Silently Swallowed",
+      "description": "catch(Exception e) with only e.printStackTrace() means errors are invisible to callers. No error propagation, no alerting.",
+      "line": 72,
+      "recommendation": "Throw typed exceptions or wrap in a domain exception; add structured logging."
+    },
+    {
+      "id": "NO_TRANSACTION",
+      "type": "Reliability",
+      "severity": "Warning",
+      "title": "No Transaction Management",
+      "description": "Multiple write operations (insert order, update stock, audit log) are executed without a transaction. Partial failures leave data inconsistent.",
+      "line": 58,
+      "recommendation": "Wrap multi-step writes in a single database transaction (@Transactional)."
+    },
+    {
+      "id": "BLOCKING_EMAIL",
+      "type": "Performance",
+      "severity": "Warning",
+      "title": "Synchronous Blocking Email Send",
+      "description": "Email is sent synchronously inside the request thread. SMTP latency or failure directly impacts order placement response time.",
+      "line": 77,
+      "recommendation": "Move to async event-driven notification (e.g. @Async or message queue)."
+    },
+    {
+      "id": "NO_TESTS",
+      "type": "Quality",
+      "severity": "Info",
+      "title": "Zero Unit Test Coverage",
+      "description": "No unit or integration tests exist for this class. Logic cannot be safely refactored or extended.",
+      "line": null,
+      "recommendation": "Add JUnit 5 tests with Mockito for service logic and an in-memory DB for repository tests."
+    },
+    {
+      "id": "RAW_TYPES",
+      "type": "Quality",
+      "severity": "Info",
+      "title": "Raw SQL Return Type Mapping",
+      "description": "ResultSet values are extracted with hardcoded column names and manual casting — brittle, not type-safe.",
+      "line": 36,
+      "recommendation": "Use Spring JdbcTemplate RowMapper or JPA entity mapping."
+    }
+  ]
+}

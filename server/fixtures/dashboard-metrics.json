@@ -1,0 +1,26 @@
+{
+  "riskScore": 78,
+  "riskLevel": "High",
+  "linesOfCode": 130,
+  "testCoverage": 0,
+  "codeSmells": 9,
+  "couplingScore": 87,
+  "dependencies": 3,
+  "technicalDebt": "14 days",
+  "language": "Java 8",
+  "lastModified": "2009-03-12",
+  "smellsByCategory": [
+    { "category": "Security",     "count": 2 },
+    { "category": "Design",       "count": 1 },
+    { "category": "Performance",  "count": 2 },
+    { "category": "Reliability",  "count": 2 },
+    { "category": "Quality",      "count": 2 }
+  ],
+  "riskBreakdown": [
+    { "factor": "SQL Injection",         "score": 95 },
+    { "factor": "Hardcoded Secrets",     "score": 90 },
+    { "factor": "No Test Coverage",      "score": 100 },
+    { "factor": "Transaction Safety",    "score": 70 },
+    { "factor": "Architectural Coupling","score": 87 }
+  ]
+}

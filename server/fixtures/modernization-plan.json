@@ -1,0 +1,56 @@
+{
+  "module": "CustomerOrderProcessor.java",
+  "targetStack": "Java 17 + Spring Boot 3 + Spring Data JDBC",
+  "totalSteps": 6,
+  "completedSteps": 0,
+  "steps": [
+    {
+      "id": 1,
+      "title": "Extract Repository Layer",
+      "description": "Move all JDBC and raw SQL code into a dedicated CustomerOrderRepository class. Replace string-concatenated queries with PreparedStatement / JdbcTemplate parameterized queries. Define a repository interface for testability.",
+      "effort": "Low",
+      "status": "Done",
+      "outcome": "Data access is isolated; SQL injection vectors eliminated."
+    },
+    {
+      "id": 2,
+      "title": "Eliminate Hardcoded Credentials",
+      "description": "Remove DB_URL, DB_USER, DB_PASS, and SMTP_HOST constants. Externalize all configuration to application.properties and inject via Spring @Value or a dedicated config class. Use environment variables in deployment.",
+      "effort": "Low",
+      "status": "Done",
+      "outcome": "No secrets in source code; configuration is environment-driven."
+    },
+    {
+      "id": 3,
+      "title": "Introduce Connection Pooling",
+      "description": "Replace DriverManager.getConnection() with a Spring-managed DataSource backed by HikariCP. All connections are now pooled, monitored, and properly returned after use.",
+      "effort": "Low",
+      "status": "Done",
+      "outcome": "Connection overhead eliminated; app can sustain concurrent load."
+    },
+    {
+      "id": 4,
+      "title": "Add Transaction Management",
+      "description": "Annotate placeOrder() with @Transactional. All database writes (insert order, decrement stock, audit log) now execute atomically — any failure rolls back the entire operation.",
+      "effort": "Low",
+      "status": "In Progress",
+      "outcome": "Data consistency guaranteed across multi-step writes."
+    },
+    {
+      "id": 5,
+      "title": "Decouple Email Notification",
+      "description": "Extract email logic into a standalone OrderNotificationService. Inject it into CustomerOrderService. Make the send asynchronous using Spring @Async so SMTP latency does not block the request thread.",
+      "effort": "Medium",
+      "status": "Pending",
+      "outcome": "Order processing is no longer blocked by email delivery; services are independently testable."
+    },
+    {
+      "id": 6,
+      "title": "Add Unit & Integration Tests",
+      "description": "Write JUnit 5 tests for CustomerOrderService using Mockito to mock the repository and notification service. Add a @JdbcTest integration test for CustomerOrderRepository using H2 in-memory database.",
+      "effort": "Medium",
+      "status": "Pending",
+      "outcome": "100% coverage on service logic; repository queries verified against schema."
+    }
+  ]
+}

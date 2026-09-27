@@ -1,0 +1,81 @@
+@import "tailwindcss";
+
+/* ─── Global reset & base ─────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: -apple-system, "Segoe UI", system-ui, sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  background: #f8f9fb;
+  color: #1f2328;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ─── Design tokens ───────────────────────────────────────── */
+:root {
+  --bg:          #ffffff;
+  --bg-surface:  #f8f9fb;
+  --bg-muted:    #f1f3f5;
+  --border:      #e5e7eb;
+  --border-md:   #d1d5db;
+  --text:        #1f2328;
+  --text-muted:  #57606a;
+  --text-faint:  #8b949e;
+  --accent:      #1f6feb;
+  --accent-dark: #1558b0;
+  --green:       #1a7f37;
+  --green-bg:    #f0fdf4;
+  --green-border:#bbf7d0;
+  --amber:       #b45309;
+  --amber-bg:    #fffbeb;
+  --amber-border:#fde68a;
+  --red:         #cf222e;
+  --red-bg:      #fff5f5;
+  --red-border:  #fecaca;
+  --shadow-sm:   0 1px 3px rgba(0,0,0,.07), 0 1px 2px rgba(0,0,0,.05);
+  --shadow-md:   0 4px 12px rgba(0,0,0,.08), 0 2px 4px rgba(0,0,0,.04);
+  --radius:      10px;
+  --radius-sm:   6px;
+}
+
+/* ─── Utility classes ─────────────────────────────────────── */
+.card {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+}
+
+.card-surface {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+/* ─── Progress bar ────────────────────────────────────────── */
+.progress-track {
+  height: 8px;
+  background: var(--bg-muted);
+  border-radius: 99px;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  border-radius: 99px;
+  background: var(--accent);
+  transition: width 0.4s ease;
+}
+
+/* ─── Table zebra ─────────────────────────────────────────── */
+.table-zebra tr:nth-child(even) td {
+  background: #f8f9fb;
+}
+
+/* ─── Diff viewer light overrides ────────────────────────── */
+.diff-light-wrap pre {
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace !important;
+  font-size: 12px !important;
+  line-height: 1.5 !important;
+}

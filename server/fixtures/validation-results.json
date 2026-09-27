@@ -1,0 +1,100 @@
+{
+  "suite": "CustomerOrderServiceTest",
+  "framework": "JUnit 5 + Mockito",
+  "runAt": "2024-11-14T10:32:05Z",
+  "totalDuration": "1.24s",
+  "summary": {
+    "total": 12,
+    "passed": 10,
+    "failed": 1,
+    "skipped": 1
+  },
+  "results": [
+    {
+      "id": 1,
+      "testClass": "CustomerOrderServiceTest",
+      "testName": "placeOrder_validInputs_createsOrderAndDecrementsStock",
+      "status": "PASSED",
+      "duration": "142ms"
+    },
+    {
+      "id": 2,
+      "testClass": "CustomerOrderServiceTest",
+      "testName": "placeOrder_customerNotFound_throwsIllegalArgument",
+      "status": "PASSED",
+      "duration": "38ms"
+    },
+    {
+      "id": 3,
+      "testClass": "CustomerOrderServiceTest",
+      "testName": "placeOrder_productNotFound_throwsIllegalArgument",
+      "status": "PASSED",
+      "duration": "31ms"
+    },
+    {
+      "id": 4,
+      "testClass": "CustomerOrderServiceTest",
+      "testName": "placeOrder_insufficientStock_throwsIllegalState",
+      "status": "PASSED",
+      "duration": "29ms"
+    },
+    {
+      "id": 5,
+      "testClass": "CustomerOrderServiceTest",
+      "testName": "placeOrder_sendsNotificationOnSuccess",
+      "status": "PASSED",
+      "duration": "45ms"
+    },
+    {
+      "id": 6,
+      "testClass": "CustomerOrderServiceTest",
+      "testName": "placeOrder_noNotificationOnFailure",
+      "status": "PASSED",
+      "duration": "33ms"
+    },
+    {
+      "id": 7,
+      "testClass": "CustomerOrderServiceTest",
+      "testName": "getPendingOrders_returnsMappedList",
+      "status": "PASSED",
+      "duration": "28ms"
+    },
+    {
+      "id": 8,
+      "testClass": "CustomerOrderRepositoryTest",
+      "testName": "findCustomerById_existingId_returnsCustomer",
+      "status": "PASSED",
+      "duration": "198ms"
+    },
+    {
+      "id": 9,
+      "testClass": "CustomerOrderRepositoryTest",
+      "testName": "createOrder_insertsRowAndReturnsId",
+      "status": "PASSED",
+      "duration": "212ms"
+    },
+    {
+      "id": 10,
+      "testClass": "CustomerOrderRepositoryTest",
+      "testName": "decrementStock_updatesCorrectRow",
+      "status": "PASSED",
+      "duration": "187ms"
+    },
+    {
+      "id": 11,
+      "testClass": "CustomerOrderRepositoryTest",
+      "testName": "findByStatus_sqlInjectionAttempt_parametersEscaped",
+      "status": "FAILED",
+      "duration": "95ms",
+      "failureReason": "Expected query to reject input \"PENDING' OR '1'='1\" but H2 returned 0 rows instead of throwing — test assertion needs adjustment for H2 parameterized behavior."
+    },
+    {
+      "id": 12,
+      "testClass": "CustomerOrderRepositoryTest",
+      "testName": "createOrder_transactionRollbackOnStockUpdateFailure",
+      "status": "SKIPPED",
+      "duration": "0ms",
+      "skipReason": "Requires full Spring context — tagged @Disabled pending integration test setup."
+    }
+  ]
+}
